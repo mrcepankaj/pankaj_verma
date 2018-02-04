@@ -84,6 +84,7 @@ public class SensorRecorderService extends Service {
         initSensors();
     }
 
+
     private void initActivity() {
 
         mActivityRecognitionHelper = new ActivityDetectionHelper(this);
