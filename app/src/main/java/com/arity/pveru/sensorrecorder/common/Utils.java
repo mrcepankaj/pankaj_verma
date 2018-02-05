@@ -6,6 +6,7 @@ import android.content.pm.PackageManager;
 import android.content.res.Resources;
 import android.hardware.Sensor;
 import android.location.Location;
+import android.location.LocationManager;
 import android.os.Build;
 import android.preference.PreferenceManager;
 import android.util.Log;
@@ -346,6 +347,11 @@ public class Utils {
         if (!file.exists())
             FileManager.getInstance(name,
                     ExecutorHelper.getMEMSExecutorInstance()).writeData(Constants.FileHeaders.SENSOR + "\n", false);
+    }
 
+    public static boolean isGpsEnabled(Context context) {
+
+        LocationManager locationManager = (LocationManager) context.getSystemService(Context.LOCATION_SERVICE);
+        return locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER);
     }
 }

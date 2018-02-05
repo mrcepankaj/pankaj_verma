@@ -48,40 +48,48 @@ public class SensorRecorderService extends Service {
     public void onCreate() {
         super.onCreate();
 
+        try {
 
-        Notification notification;
-        PackageManager packageManager = getPackageManager();
-        Intent launcherIntent = packageManager != null && !TextUtils.isEmpty(getPackageName()) ?
-                packageManager.getLaunchIntentForPackage(getPackageName()) :
-                new Intent();
+            Notification notification;
+            PackageManager packageManager = getPackageManager();
+            Intent launcherIntent = packageManager != null && !TextUtils.isEmpty(getPackageName()) ?
+                    packageManager.getLaunchIntentForPackage(getPackageName()) :
+                    new Intent();
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
 
-            NotificationUtils mNotificationUtils = new NotificationUtils(this);
-            notification = mNotificationUtils.
-                    getChannelNotification("Sensor Recorder is running", NOTIFICATION_DEFAULT_DESCRIPTION, PendingIntent.getActivity(this, NOTIFICATION_REQUEST_CODE,
-                            launcherIntent != null ? launcherIntent : new Intent(),
-                            PendingIntent.FLAG_UPDATE_CURRENT), android.R.color.background_light)
-                    .build();
+                NotificationUtils mNotificationUtils = new NotificationUtils(this);
+                notification = mNotificationUtils.
+                        getChannelNotification("Sensor Recorder is running", NOTIFICATION_DEFAULT_DESCRIPTION, PendingIntent.getActivity(this, NOTIFICATION_REQUEST_CODE,
+                                launcherIntent != null ? launcherIntent : new Intent(),
+                                PendingIntent.FLAG_UPDATE_CURRENT), android.R.color.background_light)
+                        .build();
 
-        } else {
-            NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
-                    .setSmallIcon(android.R.color.background_light)
-                    .setContentTitle("Sensor Recorder is running")
-                    .setContentText(NOTIFICATION_DEFAULT_DESCRIPTION)
-                    .setContentIntent(PendingIntent.getActivity(this, NOTIFICATION_REQUEST_CODE,
-                            launcherIntent != null ? launcherIntent : new Intent(),
-                            PendingIntent.FLAG_UPDATE_CURRENT));
-            notification = notificationBuilder.build();
-            NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
-            notificationManager.notify(NOTIFICATION_ID, notification);
+            } else {
+                NotificationCompat.Builder notificationBuilder = new NotificationCompat.Builder(this)
+                        .setSmallIcon(android.R.color.background_light)
+                        .setContentTitle("Sensor Recorder is running")
+                        .setContentText(NOTIFICATION_DEFAULT_DESCRIPTION)
+                        .setContentIntent(PendingIntent.getActivity(this, NOTIFICATION_REQUEST_CODE,
+                                launcherIntent != null ? launcherIntent : new Intent(),
+                                PendingIntent.FLAG_UPDATE_CURRENT));
+                notification = notificationBuilder.build();
+                NotificationManagerCompat notificationManager = NotificationManagerCompat.from(this);
+                notificationManager.notify(NOTIFICATION_ID, notification);
+            }
+            startForeground(NOTIFICATION_ID, notification);
+
+            initFilesAndFolders();
+            initActivity();
+            initLocation();
+            initSensors();
+
+            Utils.showToast(this, "Started SensorRecorderService successfully");
+            Utils.putLog("Started SensorRecorderService successfully");
+        } catch (Exception ex) {
+            Utils.showToast(this, "SensorRecorderService exception: " + ex.getLocalizedMessage());
+            Utils.putErrorLog("SensorRecorderService exception: " + ex.getLocalizedMessage());
         }
-        startForeground(NOTIFICATION_ID, notification);
-
-        initFilesAndFolders();
-        initActivity();
-        initLocation();
-        initSensors();
     }
 
 

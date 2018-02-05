@@ -12,6 +12,8 @@ import android.support.v4.app.ActivityCompat;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ListView;
 
 import com.arity.pveru.sensorrecorder.adaptors.DetectedSensorsAdapter;
@@ -29,7 +31,7 @@ import com.google.android.gms.location.DetectedActivity;
 
 import java.util.ArrayList;
 
-public class HomeActivity extends AppCompatActivity implements ILocationSensorUpdateListeners, IActivitySensorUpdateListener, ISensorUpdateListeners {
+public class HomeActivity extends AppCompatActivity implements ILocationSensorUpdateListeners, IActivitySensorUpdateListener, ISensorUpdateListeners, View.OnClickListener {
 
     protected static final String TAG = "MainActivity";
 
@@ -37,6 +39,7 @@ public class HomeActivity extends AppCompatActivity implements ILocationSensorUp
     private static final int REQUEST_PERMISSIONS_REQUEST_CODE = 34;
 
     private Context mContext;
+    Button btn_StopRecording;
 
     ListView detectedActivitiesListView;
     ListView detectedLocationsListView;
@@ -68,6 +71,10 @@ public class HomeActivity extends AppCompatActivity implements ILocationSensorUp
 
 
     private void initUI() {
+
+        btn_StopRecording = (Button) findViewById(R.id.btn_StopRecording);
+        btn_StopRecording.setVisibility(Button.GONE);
+        btn_StopRecording.setOnClickListener(this);
 
         detectedActivitiesListView = (ListView) findViewById(
                 R.id.detected_activities_listview);
@@ -103,6 +110,8 @@ public class HomeActivity extends AppCompatActivity implements ILocationSensorUp
         } else {
             mContext.getApplicationContext().startService(intent);
         }
+
+        btn_StopRecording.setVisibility(Button.VISIBLE);
     }
 
     @Override
@@ -189,5 +198,17 @@ public class HomeActivity extends AppCompatActivity implements ILocationSensorUp
                 detectedSensorsListView.scrollTo(detectedSensorsListView.getScrollY(), detectedSensorsListView.getScrollY());
             }
         });
+    }
+
+    @Override
+    public void onClick(View v) {
+
+        if (v.getId() == R.id.btn_StopRecording) {
+            Intent intent = new Intent(mContext, SensorRecorderService.class);
+            stopService(intent);
+
+            Utils.showToast(this, "Recording stopped. Relaunch the app to resume recording.");
+            finish();
+        }
     }
 }
