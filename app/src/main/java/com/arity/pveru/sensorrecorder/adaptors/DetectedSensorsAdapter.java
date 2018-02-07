@@ -82,9 +82,9 @@ public class DetectedSensorsAdapter extends ArrayAdapter<SensorEvent> {
     public void updateSensors(SensorEvent sensorEvent) {
 
         // Remove all items.
-        if (this.getCount() > 200) {
+        //if (this.getCount() > 200) {
             clear();
-        }
+        //}
 
         // Adding the new list items notifies attached observers that the underlying data has
         // changed and views reflecting the data should refresh.

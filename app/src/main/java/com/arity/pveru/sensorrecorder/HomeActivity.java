@@ -43,14 +43,44 @@ public class HomeActivity extends AppCompatActivity implements ILocationSensorUp
 
     ListView detectedActivitiesListView;
     ListView detectedLocationsListView;
-    ListView detectedSensorsListView;
+
+    ListView detected_sensors_accelerometer_listview;
+    ListView detected_sensors_linearAcc_listview;
+
+    ListView detected_sensors_stepCounter_listview;
+    ListView detected_sensors_stepDetector_listview;
+
+    ListView detected_sensors_gyro_listview;
+    ListView detected_sensors_gravity_listview;
+
+    ListView detected_sensors_motionDetect_listview;
+    ListView detected_sensors_significantMotion_listview;
+
+    ListView detected_sensors_proximity_listview;
+    ListView detected_sensors_stationaryDetect_listview;
+
 
     /**
      * Adapter backed by a list of DetectedActivity objects.
      */
     private DetectedActivitiesAdapter activitiesAdapter;
     private DetectedLocationsAdapter locationsAdapter;
-    private DetectedSensorsAdapter sensorAdapter;
+
+    private DetectedSensorsAdapter sensorAccelerometerAdapter;
+    private DetectedSensorsAdapter sensorLinearAccDetectorAdapter;
+
+    private DetectedSensorsAdapter sensorStepCounterAdapter;
+    private DetectedSensorsAdapter sensorStepDetectorAdapter;
+
+    private DetectedSensorsAdapter sensorGyroDetectorAdapter;
+    private DetectedSensorsAdapter sensorGravityDetectorAdapter;
+
+    private DetectedSensorsAdapter sensorMotionDetectDetectorAdapter;
+    private DetectedSensorsAdapter sensorSignificantMotionDetectorAdapter;
+
+    private DetectedSensorsAdapter sensorProximityDetectorAdapter;
+    private DetectedSensorsAdapter sensorStationaryDetectDetectorAdapter;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -66,14 +96,12 @@ public class HomeActivity extends AppCompatActivity implements ILocationSensorUp
             if (Utils.isGpsEnabled(this))
                 startRecorderService();
             else {
-                Utils.showToast(this, "Enable location services and launch the app again");
+                Utils.showToast(this, "Enable location services and launch the app again!");
                 finish();
             }
         } else {
             requestPermissions();
         }
-
-
     }
 
 
@@ -89,23 +117,71 @@ public class HomeActivity extends AppCompatActivity implements ILocationSensorUp
         detectedLocationsListView = (ListView) findViewById(
                 R.id.detected_locations_listview);
 
-        detectedSensorsListView = (ListView) findViewById(
-                R.id.detected_sensors_listview);
+
+        detected_sensors_accelerometer_listview = (ListView) findViewById(
+                R.id.detected_sensors_accelerometer_listview);
+        detected_sensors_linearAcc_listview = (ListView) findViewById(
+                R.id.detected_sensors_linearAcc_listview);
+
+        detected_sensors_stepCounter_listview = (ListView) findViewById(
+                R.id.detected_sensors_stepCounter_listview);
+        detected_sensors_stepDetector_listview = (ListView) findViewById(
+                R.id.detected_sensors_stepDetector_listview);
+
+        detected_sensors_gyro_listview = (ListView) findViewById(
+                R.id.detected_sensors_gyro_listview);
+        detected_sensors_gravity_listview = (ListView) findViewById(
+                R.id.detected_sensors_gravity_listview);
+
+        detected_sensors_motionDetect_listview = (ListView) findViewById(
+                R.id.detected_sensors_motionDetect_listview);
+        detected_sensors_significantMotion_listview = (ListView) findViewById(
+                R.id.detected_sensors_significantMotion_listview);
+
+        detected_sensors_stationaryDetect_listview = (ListView) findViewById(
+                R.id.detected_sensors_stationaryDetect_listview);
+        detected_sensors_proximity_listview = (ListView) findViewById(
+                R.id.detected_sensors_proximity_listview);
 
 
         // Bind the adapter to the ListView responsible for display data for detected activities.
-        ArrayList<DetectedActivity> detectedActivities = new ArrayList<>();
-        activitiesAdapter = new DetectedActivitiesAdapter(this, detectedActivities);
+        activitiesAdapter = new DetectedActivitiesAdapter(this, new ArrayList<DetectedActivity>());
         detectedActivitiesListView.setAdapter(activitiesAdapter);
 
         // Bind the adapter to the ListView responsible for display data for detected locations.
-        ArrayList<Location> locations = new ArrayList<>();
-        locationsAdapter = new DetectedLocationsAdapter(this, locations);
+        locationsAdapter = new DetectedLocationsAdapter(this, new ArrayList<Location>());
         detectedLocationsListView.setAdapter(locationsAdapter);
 
-        ArrayList<SensorEvent> sensors = new ArrayList<>();
-        sensorAdapter = new DetectedSensorsAdapter(this, sensors);
-        detectedSensorsListView.setAdapter(sensorAdapter);
+        sensorAccelerometerAdapter = new DetectedSensorsAdapter(this, new ArrayList<SensorEvent>());
+        detected_sensors_accelerometer_listview.setAdapter(sensorAccelerometerAdapter);
+
+        sensorLinearAccDetectorAdapter = new DetectedSensorsAdapter(this, new ArrayList<SensorEvent>());
+        detected_sensors_linearAcc_listview.setAdapter(sensorLinearAccDetectorAdapter);
+
+        sensorStepCounterAdapter = new DetectedSensorsAdapter(this, new ArrayList<SensorEvent>());
+        detected_sensors_stepCounter_listview.setAdapter(sensorStepCounterAdapter);
+
+        sensorStepDetectorAdapter = new DetectedSensorsAdapter(this, new ArrayList<SensorEvent>());
+        detected_sensors_stepDetector_listview.setAdapter(sensorStepDetectorAdapter);
+
+        sensorGyroDetectorAdapter = new DetectedSensorsAdapter(this, new ArrayList<SensorEvent>());
+        detected_sensors_gyro_listview.setAdapter(sensorGyroDetectorAdapter);
+
+        sensorGravityDetectorAdapter = new DetectedSensorsAdapter(this, new ArrayList<SensorEvent>());
+        detected_sensors_gravity_listview.setAdapter(sensorGravityDetectorAdapter);
+
+        sensorMotionDetectDetectorAdapter = new DetectedSensorsAdapter(this, new ArrayList<SensorEvent>());
+        detected_sensors_motionDetect_listview.setAdapter(sensorMotionDetectDetectorAdapter);
+
+        sensorSignificantMotionDetectorAdapter = new DetectedSensorsAdapter(this, new ArrayList<SensorEvent>());
+        detected_sensors_significantMotion_listview.setAdapter(sensorSignificantMotionDetectorAdapter);
+
+        sensorProximityDetectorAdapter = new DetectedSensorsAdapter(this, new ArrayList<SensorEvent>());
+        detected_sensors_proximity_listview.setAdapter(sensorProximityDetectorAdapter);
+
+        sensorStationaryDetectDetectorAdapter = new DetectedSensorsAdapter(this, new ArrayList<SensorEvent>());
+        detected_sensors_stationaryDetect_listview.setAdapter(sensorStationaryDetectDetectorAdapter);
+
     }
 
     private void startRecorderService() {
@@ -193,19 +269,53 @@ public class HomeActivity extends AppCompatActivity implements ILocationSensorUp
 
     @Override
     public void onSensorUpdate(SensorEvent sensorEvent) {
-        sensorAdapter.updateSensors(sensorEvent);
-        scrollDown();
+
+        switch (sensorEvent.sensor.getType()) {
+            case Sensor.TYPE_ACCELEROMETER:
+                sensorAccelerometerAdapter.updateSensors(sensorEvent);
+                break;
+            case Sensor.TYPE_LINEAR_ACCELERATION:
+                sensorLinearAccDetectorAdapter.updateSensors(sensorEvent);
+                break;
+            case Sensor.TYPE_STEP_COUNTER:
+                sensorStepCounterAdapter.updateSensors(sensorEvent);
+                break;
+            case Sensor.TYPE_STEP_DETECTOR:
+                sensorStepDetectorAdapter.updateSensors(sensorEvent);
+                break;
+            case Sensor.TYPE_GYROSCOPE:
+                sensorGyroDetectorAdapter.updateSensors(sensorEvent);
+                break;
+            case Sensor.TYPE_GRAVITY:
+                sensorGravityDetectorAdapter.updateSensors(sensorEvent);
+                break;
+            case Sensor.TYPE_MOTION_DETECT:
+                sensorMotionDetectDetectorAdapter.updateSensors(sensorEvent);
+                break;
+            case Sensor.TYPE_SIGNIFICANT_MOTION:
+                sensorSignificantMotionDetectorAdapter.updateSensors(sensorEvent);
+                break;
+            case Sensor.TYPE_PROXIMITY:
+                sensorProximityDetectorAdapter.updateSensors(sensorEvent);
+                break;
+            case Sensor.TYPE_STATIONARY_DETECT:
+                sensorStationaryDetectDetectorAdapter.updateSensors(sensorEvent);
+                break;
+
+        }
+
+        //scrollDown();
     }
 
-    private void scrollDown() {
-
-        detectedSensorsListView.post(new Runnable() {
-            @Override
-            public void run() {
-                detectedSensorsListView.scrollTo(detectedSensorsListView.getScrollY(), detectedSensorsListView.getScrollY());
-            }
-        });
-    }
+//    private void scrollDown() {
+//
+//        detected_sensors_accelerometer_listview.post(new Runnable() {
+//            @Override
+//            public void run() {
+//                detected_sensors_accelerometer_listview.scrollTo(detected_sensors_accelerometer_listview.getScrollY(), detected_sensors_accelerometer_listview.getScrollY());
+//            }
+//        });
+//    }
 
     @Override
     public void onClick(View v) {
