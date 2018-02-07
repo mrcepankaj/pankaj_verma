@@ -28,13 +28,19 @@
             android:layout_marginTop="@dimen/narrow_space"
             android:text="TimeStamp:" />
 
+
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
         <TextView
             android:id="@+id/detected_location_timestamp"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_alignParentEnd="true"
-            android:layout_alignParentRight="true"
-            android:layout_marginTop="@dimen/narrow_space" />
+            android:layout_marginTop="@dimen/narrow_space"
+            android:text="TimeStamp:" />
     </RelativeLayout>
 
     <RelativeLayout

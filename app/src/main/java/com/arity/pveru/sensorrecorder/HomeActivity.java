@@ -63,10 +63,17 @@ public class HomeActivity extends AppCompatActivity implements ILocationSensorUp
         initUI();
 
         if (checkPermissions()) {
-            startRecorderService();
+            if (Utils.isGpsEnabled(this))
+                startRecorderService();
+            else {
+                Utils.showToast(this, "Enable location services and launch the app again");
+                finish();
+            }
         } else {
             requestPermissions();
         }
+
+
     }
 
 

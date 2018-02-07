@@ -3,8 +3,12 @@ package com.arity.pveru.sensorrecorder;
 import android.app.Notification;
 import android.app.PendingIntent;
 import android.app.Service;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.pm.PackageManager;
+import android.location.LocationManager;
 import android.os.Build;
 import android.os.IBinder;
 import android.support.v4.app.NotificationCompat;
@@ -21,6 +25,7 @@ import com.arity.pveru.sensorrecorder.sensors.location.GpsLocationProvider;
 import com.arity.pveru.sensorrecorder.sensors.sensors.SensorHelper;
 
 import java.io.File;
+import java.util.Calendar;
 
 public class SensorRecorderService extends Service {
 
@@ -32,8 +37,11 @@ public class SensorRecorderService extends Service {
     GpsLocationProvider gpsLocationProvider;
     SensorHelper sensorHelper;
 
+    GpsSwitchMonitor gpsSwitchMonitor;
+
 
     public SensorRecorderService() {
+
     }
 
     @Override
@@ -84,6 +92,8 @@ public class SensorRecorderService extends Service {
             initLocation();
             initSensors();
 
+            startMonitors();
+
             Utils.showToast(this, "Started SensorRecorderService successfully");
             Utils.putLog("Started SensorRecorderService successfully");
         } catch (Exception ex) {
@@ -129,6 +139,8 @@ public class SensorRecorderService extends Service {
         if (sensorHelper != null)
             sensorHelper.stopSensorRecording();
 
+        stopMonitors();
+
         super.onDestroy();
     }
 
@@ -142,6 +154,7 @@ public class SensorRecorderService extends Service {
         if (gpsLocationProvider != null) {
             gpsLocationProvider.stopLocationFetch();
         }
+
     }
 
     private void initFilesAndFolders() {
@@ -173,6 +186,62 @@ public class SensorRecorderService extends Service {
         if (!locationFile.exists())
             FileManager.getInstance(Constants.FilePath.LOCATION, ExecutorHelper.getLocationExecutorInstance()).writeData(Constants.FileHeaders.LOCATION + "\n", true);
 
+    }
+
+    private void startMonitors() {
+        gpsSwitchMonitor = new GpsSwitchMonitor(this);
+        gpsSwitchMonitor.start();
+    }
+
+    private void stopMonitors() {
+        if (gpsSwitchMonitor != null)
+            gpsSwitchMonitor.stop();
+    }
+
+
+    private class GpsSwitchMonitor {
+
+        /*Private Members*/
+        private boolean hasRegistered;
+        private Context context;
+
+
+        public GpsSwitchMonitor(Context mContext) {
+            this.context = mContext;
+        }
+
+        private BroadcastReceiver gpsSwitchMonitorBroadCastReceiver = new BroadcastReceiver() {
+            @Override
+            public void onReceive(Context context, Intent intent) {
+                if (!Utils.isGpsEnabled(context)) {
+                    Utils.putLog("GpsSwitchMonitor exception: GPS turned off at: " + Utils.getTimeW3C(Calendar.getInstance().getTime().getTime(),
+                            Constants.DATE_FORMAT_YYYY_MM_DD_T_HH_MM_SSZ));
+                    //Utils.showToast(context, "Turn on location and launch the app again.");
+                    stopSelf();
+                    //SensorRecorderService.this.getApplication().getActivity().finish();
+                    System.exit(0);
+                }
+            }
+        };
+
+
+        public void start() {
+            if (!hasRegistered) {
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.KITKAT) {
+                    context.registerReceiver(gpsSwitchMonitorBroadCastReceiver, new IntentFilter(LocationManager.MODE_CHANGED_ACTION));
+                } else {
+                    context.registerReceiver(gpsSwitchMonitorBroadCastReceiver, new IntentFilter(LocationManager.PROVIDERS_CHANGED_ACTION));
+                }
+                hasRegistered = true;
+            }
+        }
+
+        public void stop() {
+            if (hasRegistered) {
+                context.unregisterReceiver(gpsSwitchMonitorBroadCastReceiver);
+                hasRegistered = false;
+            }
+        }
     }
 
 
