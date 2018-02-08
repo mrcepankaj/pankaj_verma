@@ -58,17 +58,19 @@ public class DetectedSensorsAdapter extends ArrayAdapter<SensorEvent> {
 
         // Find the UI widgets.
         TextView tvName = (TextView) view.findViewById(R.id.detected_sensor_name);
+        TextView tvValue = (TextView) view.findViewById(R.id.detected_sensor_value);
 
 
         // Populate widgets with values.
         if (sensorEvent != null) {
-            //tvName.setText(sensorEvent.sensor.getName());
+            tvName.setText(sensorEvent.sensor.getName() + " (Type: " + sensorEvent.sensor.getType() + ", Accuracy: " + sensorEvent.accuracy + " )");
 
-            StringBuilder detail = new StringBuilder(sensorEvent.sensor.getName() + "-" + sensorEvent.sensor.getType() + ": ");
+            StringBuilder detail = new StringBuilder();
             for (float value : sensorEvent.values) {
-                detail.append(value + " ");
+                detail.append(value + ",");
             }
-            tvName.setText(detail);
+            detail.deleteCharAt(detail.length() - 1);
+            tvValue.setText(detail);
         }
         return view;
     }
@@ -83,7 +85,7 @@ public class DetectedSensorsAdapter extends ArrayAdapter<SensorEvent> {
 
         // Remove all items.
         //if (this.getCount() > 200) {
-            clear();
+        clear();
         //}
 
         // Adding the new list items notifies attached observers that the underlying data has

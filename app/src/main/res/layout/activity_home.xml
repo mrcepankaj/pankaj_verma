@@ -72,57 +72,67 @@
 
         </LinearLayout>
 
-        <ListView
-            android:id="@+id/detected_sensors_accelerometer_listview"
+        <ScrollView
             android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            android:layout_height="wrap_content">
 
-        <ListView
-            android:id="@+id/detected_sensors_linearAcc_listview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="vertical">
 
-        <ListView
-            android:id="@+id/detected_sensors_stepCounter_listview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+                <ListView
+                    android:id="@+id/detected_sensors_accelerometer_listview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-        <ListView
-            android:id="@+id/detected_sensors_stepDetector_listview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+                <ListView
+                    android:id="@+id/detected_sensors_linearAcc_listview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-        <ListView
-            android:id="@+id/detected_sensors_gyro_listview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+                <ListView
+                    android:id="@+id/detected_sensors_stepCounter_listview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-        <ListView
-            android:id="@+id/detected_sensors_gravity_listview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+                <ListView
+                    android:id="@+id/detected_sensors_stepDetector_listview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-        <ListView
-            android:id="@+id/detected_sensors_motionDetect_listview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+                <ListView
+                    android:id="@+id/detected_sensors_gyro_listview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-        <ListView
-            android:id="@+id/detected_sensors_significantMotion_listview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+                <ListView
+                    android:id="@+id/detected_sensors_gravity_listview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-        <ListView
-            android:id="@+id/detected_sensors_proximity_listview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+                <ListView
+                    android:id="@+id/detected_sensors_motionDetect_listview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
-        <ListView
-            android:id="@+id/detected_sensors_stationaryDetect_listview"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content" />
+                <ListView
+                    android:id="@+id/detected_sensors_significantMotion_listview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
+                <ListView
+                    android:id="@+id/detected_sensors_proximity_listview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
 
+                <ListView
+                    android:id="@+id/detected_sensors_stationaryDetect_listview"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content" />
+
+            </LinearLayout>
+        </ScrollView>
     </LinearLayout>
 
 </android.support.constraint.ConstraintLayout>
