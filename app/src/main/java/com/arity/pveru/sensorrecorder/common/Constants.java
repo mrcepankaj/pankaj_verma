@@ -89,7 +89,7 @@ public final class Constants {
         public static final String APPINFO = "appVersion,phoneInfo,osVersion";
         public static final String SENSOR = "type,name,time,accuracy,v1,v2,v3,v4,v5,v6,v7";
         public static final String ACTIVITY = "timestamp,IN_VEHICLE,ON_BICYCLE,ON_FOOT,STILL,UNKNOWN,TILTING,WALKING,RUNNING";
-        public static final String LOCATION = "timestamp,altitude,course,horizontalAccuracy,latitude,longitude,rawSpeed";
+        public static final String LOCATION = "timestamp,altitude,course,horizontalAccuracy,latitude,longitude,rawSpeed,verticalAccuracy";
 
     }
 

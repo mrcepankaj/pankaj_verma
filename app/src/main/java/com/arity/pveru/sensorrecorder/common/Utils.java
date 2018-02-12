@@ -197,8 +197,8 @@ public class Utils {
     public static void putLocationToFile(long timeStamp, Location location) {
 
         //To increase the performance of repeated string concatenation.Using StringBuffer.append() instead of string + operator.
-        StringBuilder value = new StringBuilder(getTimeW3C(location.getTime(), Constants.DATE_FORMAT_YYYY_MM_DD_T_HH_MM_SSZ));
-        value.append(",");
+        StringBuilder value = new StringBuilder();
+        //value.append(",");
         value.append(location.getAltitude());
         value.append(",");
         value.append(location.getBearing());
